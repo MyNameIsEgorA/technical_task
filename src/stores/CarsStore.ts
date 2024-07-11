@@ -1,26 +1,28 @@
-import { action, observable, makeObservable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import axios from 'axios';
-import { Car } from '../types/Car';
+import { Car, CarOnMap } from '../types/Car';
 
 class CarStore {
-    @observable data: Car[] = [];
-    @observable loading: boolean = true;
-    @observable error: any = null;
-    @observable sortOrder: 'asc' | 'desc' | null = null;
-    @observable sortBy: 'year' | 'price' | null = null;
+    cars: Car[] = [];
+    loading: boolean = true;
+    error: any = null;
+    sortOrder: 'asc' | 'desc' | null = null;
+    sortBy: 'year' | 'price' | null = null;
+    carsOnMap: CarOnMap[] = [];
 
     constructor() {
-        makeObservable(this);
+        makeAutoObservable(this);
         this.fetchCars();
     }
 
-    @action
     fetchCars = async () => {
         try {
             const response = await axios.get('https://test.tspb.su/test-task/vehicles');
             runInAction(() => {
-                this.data = response.data;
+                this.cars = response.data;
                 this.loading = false;
+                this.setCarsOnMap();
+                console.log(JSON.stringify(this.carsOnMap))
             });
         } catch (error) {
             runInAction(() => {
@@ -30,27 +32,38 @@ class CarStore {
         }
     };
 
-    @action
+    setCarsOnMap = (): void => {
+        let newCarsOnMap: CarOnMap[] = []
+        for (let car of this.cars) {
+            newCarsOnMap.push({
+                name: car.name,
+                coords: {
+                    longitude: car.longitude,
+                    latitude: car.latitude
+                }
+            })
+        }
+        this.carsOnMap = newCarsOnMap;
+    }
+
     handleSaveCar = (updatedCar: Car) => {
-        const updatedData = this.data.map(car => 
+        const updatedData = this.cars.map(car => 
             car.id === updatedCar.id ? updatedCar : car
         );
-        this.data = updatedData;
+        this.cars = updatedData;
     };
 
-    @action
     sortData = (by: 'year' | 'price') => {
-        const sortedData = [...this.data].sort((a, b) => {
+        const sortedData = [...this.cars].sort((a, b) => {
             if (by === 'year') {
                 return this.sortOrder === 'asc' ? a.year - b.year : b.year - a.year;
             } else {
                 return this.sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
             }
         });
-        this.data = sortedData;
+        this.cars = sortedData;
     };
 
-    @action
     toggleSortOrder = (by: 'year' | 'price') => {
         if (this.sortBy === by) {
             this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
@@ -62,4 +75,4 @@ class CarStore {
     };
 }
 
-export default new CarStore();
+export const carStore = new CarStore();

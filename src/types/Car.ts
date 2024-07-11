@@ -6,5 +6,13 @@ export interface Car {
     color: string,
     price: number,
     latitude: number, 
-    longtitude: number,
+    longitude: number,
+}
+
+export interface CarOnMap {
+    name: string;
+    coords: {
+        latitude: number,
+        longitude: number,
+    };
 }
