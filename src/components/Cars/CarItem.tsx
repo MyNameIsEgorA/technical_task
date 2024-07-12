@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Car } from '../types/Car';
+import { Car } from '../../types/Car';
 import ChangeCarButtons from './ChangeCarButtons';
+import { carStore } from '../../stores/CarsStore';
 
 interface CarItemProps {
-    car: Car;
+    id: number;
     onSave: (updatedCar: Car) => void;
 }
 
-const CarItem: React.FC<CarItemProps> = ({ car, onSave }) => {
+const CarItem: React.FC<CarItemProps> = ({ id, onSave }) => {
+
+    const car: Car | undefined = carStore.getCarById(id)
+
+    if (!car) {
+        return "Client side error, not enough tests";
+    }
+
     const [isEditing, setIsEditing] = useState(false);
     const [editedCar, setEditedCar] = useState<Car>(car);
 

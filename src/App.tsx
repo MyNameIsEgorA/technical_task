@@ -1,4 +1,4 @@
-import CarsList from "./components/CarsList";
+import CarsList from "./components/Cars/CarsList";
 
 const App = () => {
     return (

@@ -28,6 +28,7 @@ li {
     flex-direction: column;
     justify-content: center;
     align-items: left;
+    overflow: hidden;
 }
 
 .car-fullname {

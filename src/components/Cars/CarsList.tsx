@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { carStore } from '../stores/CarsStore';
+import { carStore } from '../../stores/CarsStore';
 import CarItem from './CarItem';
 import SortButtons from './SortButtons';
-import MapComponent from './Map/Map';
+import MapComponent from '../Map/Map';
 import './CarsList.css';
 
 
@@ -24,8 +24,8 @@ const CarsList: React.FC = observer(() => {
             <h1>Data from Server</h1>
             <SortButtons sortBy={sortBy} sortOrder={sortOrder} toggleSortOrder={toggleSortOrder} />
             <ul>
-                {cars.map(item => (
-                    <CarItem car={item} key={item.id} onSave={handleSaveCar} />
+                {cars.map(car => (
+                    <CarItem id={car.id} key={car.id} onSave={handleSaveCar} />
                 ))}
             </ul>
         </div>

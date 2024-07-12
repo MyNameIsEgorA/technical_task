@@ -46,6 +46,10 @@ class CarStore {
         this.carsOnMap = newCarsOnMap;
     }
 
+    getCarById = (id: number): Car | undefined => {
+        return this.cars.find(car => car.id === id);
+    }
+
     handleSaveCar = (updatedCar: Car) => {
         const updatedData = this.cars.map(car => 
             car.id === updatedCar.id ? updatedCar : car
