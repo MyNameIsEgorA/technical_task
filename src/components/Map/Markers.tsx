@@ -11,7 +11,7 @@ const Markers: React.FC<{ cars: CarOnMap[] }> = ({ cars }) => {
   const [routingControl, setRoutingControl] = useState<any>(null);
   const map = useMap();
 
-  const { coords: userCoords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+  const { coords: userCoords } = useGeolocated({
     positionOptions: {
       enableHighAccuracy: false,
     },
